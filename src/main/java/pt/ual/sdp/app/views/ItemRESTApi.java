@@ -16,9 +16,8 @@ import java.util.List;
 @SuppressWarnings("serial")
 @WebServlet("/Items/*")
 public class ItemRESTApi extends HttpServlet {
-
-        @Override
-        protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json");
         List<List<String>> items = Database.getItems();
         JsonObjectBuilder jsonBuilder = Json.createObjectBuilder();
@@ -37,12 +36,25 @@ public class ItemRESTApi extends HttpServlet {
         jsonWriter.writeObject(jsonBuilder.build());
         jsonWriter.close();
     }
-        @Override
-        protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-            JsonObject reader = Json.createReader(req.getReader()).readObject();
-            Item item = new Item(reader.getString("name"), reader.getString("description"));
-            //Database.createItem(reader.getString("name"),reader.getString("description"));
-            Database.createItem(item);
-        }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        JsonObject reader = Json.createReader(req.getReader()).readObject();
+        Item item = new Item(reader.getString("name"), reader.getString("description"));
+        //Database.createItem(reader.getString("name"),reader.getString("description"));
+        Database.createItem(item);
+    }
+
+    @Override
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        JsonObject reader = Json.createReader(req.getReader()).readObject();
+        Database.alterDescription(reader.getString("name"), reader.getString("description"));
+    }
+
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        JsonObject reader = Json.createReader(req.getReader()).readObject();
+        Database.deleteItem(reader.getString("name"));
+    }
 }
 

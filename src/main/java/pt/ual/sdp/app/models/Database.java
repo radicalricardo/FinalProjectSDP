@@ -7,7 +7,7 @@ import java.sql.*;
 import java.util.*;
 
 public class Database {
-    public static final String address = "jdbc:postgresql://localhost:5432/restAPI";
+    public static final String address = "jdbc:postgresql://postgres-0:5432/restAPI";
     public static Connection conn = null;
     public static final String user = "postgres";
     public static final String password = "30002299";
@@ -139,22 +139,22 @@ public class Database {
     }
 
 
-    public static String depositItems(int qty, String itemName){
+    public static int depositItems(int qty, String itemName){
         connectDB();
         try {
             Statement statement = conn.createStatement();
             int id = getItemId(itemName);
             if (id == 0){
-                return "não existe registo do Item";
+                return 1;
             }
             //INSERT INTO deposit(qty, item_id) VALUES(10, 2);
             statement.execute("INSERT INTO deposit(qty, item_id) VALUES(" + qty + ", " + id + ")");
             statement.execute("UPDATE stock SET stock = stock + %s WHERE item_id = %d".formatted(qty, id));
         } catch (SQLException throwables) {
-            return "não existe registo do Item";
+            return 1;
         }
         disconnectDB();
-        return "depositou item";
+        return 0;
     }
 
     /*//Old overloaded method (Unused)
@@ -170,7 +170,7 @@ public class Database {
         disconnectDB();
     }//*/
 
-    public static void createDelivery(String address, int qty, String itemName){
+    public static int createDelivery(String address, int qty, String itemName){
         connectDB();
         try {
             Statement statement = conn.createStatement();
@@ -184,10 +184,11 @@ public class Database {
             throwables.printStackTrace();
         }
         disconnectDB();
+        return 0;
     }
 
     //Overloaded method for hashmaps<name, qty>
-    public static void createDelivery(String address, Map<String, Integer> itemNames){
+    public static int createDelivery(String address, Map<String, Integer> itemNames){
         connectDB();
         try {
             Statement statement = conn.createStatement();
@@ -204,6 +205,7 @@ public class Database {
             throwables.printStackTrace();
         }
         disconnectDB();
+        return 0;
     }
     //returns [delivery[address[[item, quantity]]], delivery[address[[item, quantity][item, quantity][item, quantity][item, quantity]]]]
     public static List<Delivery> getDelivery(){
@@ -245,11 +247,29 @@ public class Database {
         return "alterou o nome do item";
     }
 
+    public static String alterAddress(int id, String newAddress){
+        connectDB();
+        try {
+            Statement statement = conn.createStatement();
+            statement.execute("UPDATE delivery SET address='" + newAddress + "' WHERE id=" + id);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        disconnectDB();
+        return "alterou a morada da entrega";
+    }
+
     public static void deleteItem(String itemName){
         connectDB();
         try {
             Statement statement = conn.createStatement();
             int id = getItemId(itemName);
+            if(getStock(id) == 0) {
+                statement.execute("DELETE FROM stock WHERE item_id=" + id);
+            }
+            else {
+                return;
+            }
             statement.execute("DELETE FROM item WHERE id=" + id);
         } catch (SQLException throwables) {
             throwables.printStackTrace();

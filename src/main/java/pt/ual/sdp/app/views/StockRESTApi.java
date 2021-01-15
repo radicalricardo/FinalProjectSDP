@@ -40,7 +40,13 @@ public class StockRESTApi extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         JsonObject reader = Json.createReader(req.getReader()).readObject();
-        Database.depositItems(reader.getInt("qty"),reader.getString("itemName"));
+        int result = Database.depositItems(reader.getInt("qty"),reader.getString("name"));
+        if (result == 1){
+            resp.sendError(666, "O item não foi registado");
+        }
+
     }
+
+
 }
 

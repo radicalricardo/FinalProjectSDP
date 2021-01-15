@@ -1,0 +1,68 @@
+package pt.ual.sdp.app.views;
+
+import pt.ual.sdp.app.controllers.Delivery;
+import pt.ual.sdp.app.models.Database;
+
+import javax.json.*;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+//Delivery
+@WebServlet("/Delivery/*")
+public class DeliveryRESTApi extends HttpServlet {
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.setContentType("application/json");
+        List<Delivery> deliveryList = Database.getDelivery();
+        JsonObjectBuilder jsonBuilder = Json.createObjectBuilder();
+        for (Delivery delivery : deliveryList){
+            JsonObjectBuilder addressJson = Json.createObjectBuilder();
+            addressJson.add("address", delivery.getAddress());
+            JsonArrayBuilder jsonArray = Json.createArrayBuilder();
+            for(Map.Entry<String, Integer> item : delivery.getItem().entrySet()){
+                JsonObjectBuilder buffer = Json.createObjectBuilder();
+                buffer.add("name", item.getKey());
+                buffer.add("qty", item.getValue());
+                jsonArray.add(buffer);
+            }
+            addressJson.add("items", jsonArray.build());
+            jsonBuilder.add(delivery.getId(), addressJson.build());
+        }
+        JsonWriter jsonWriter = Json.createWriter(resp.getWriter());
+        jsonWriter.writeObject(jsonBuilder.build());
+        jsonWriter.close();
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        JsonObject reader = Json.createReader(req.getReader()).readObject();
+        String address = reader.getString("address");
+        JsonArray itemList = reader.getJsonArray("items");
+        Map<String, Integer> delivery = new HashMap<>();
+
+        for(int i = 0; i < itemList.size(); i++){
+            delivery.put(itemList.getJsonObject(i).getString("name"), itemList.getJsonObject(i).getInt("qty"));
+        }
+
+        int result = Database.createDelivery(address, delivery);
+        if (result == 1){
+            resp.sendError(666, "O item não foi registado");
+        }
+    }
+
+    @Override
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        JsonObject reader = Json.createReader(req.getReader()).readObject();
+        Database.alterAddress(reader.getInt("id"), reader.getString("address"));
+    }
+
+}
+
