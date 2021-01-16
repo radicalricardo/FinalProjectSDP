@@ -41,6 +41,7 @@ public class DeliveryRESTApi extends HttpServlet {
         jsonWriter.close();
     }
 
+    //{"address": "Avenida do Exemplo", "items": [{"name" : "shaman", "qty": 30}, {"name" : "druid", "qty": 30}]}
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         JsonObject reader = Json.createReader(req.getReader()).readObject();
@@ -54,10 +55,11 @@ public class DeliveryRESTApi extends HttpServlet {
 
         int result = Database.createDelivery(address, delivery);
         if (result == 1){
-            resp.sendError(666, "O item não foi registado");
+            resp.sendError(201, "A entrega não foi registada");
         }
     }
 
+    //{"id": 30, "address": "Rua do Teste"}
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         JsonObject reader = Json.createReader(req.getReader()).readObject();

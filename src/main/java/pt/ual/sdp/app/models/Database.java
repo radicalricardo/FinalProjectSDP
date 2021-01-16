@@ -1,5 +1,10 @@
 package pt.ual.sdp.app.models;
 
+//docker run --name postgres-0 -e POSTGRES_PASSWORD=30002299 --network net -v "path/to/db":/sql -d postgres:alpine
+//docker run --name sdpWildfly -p 8080:8080 --network net -v "path/to/war":/opt/jboss/wildfly/standalone/deployments asabino/wildfly:21.0.2.Final-jdk15
+
+
+
 import pt.ual.sdp.app.controllers.Delivery;
 import pt.ual.sdp.app.controllers.Item;
 
@@ -62,6 +67,7 @@ public class Database {
         return id;
     }
 
+    //this isn't used
     public static String getItemName(int id){
         String itemName = null;
         try {
@@ -110,7 +116,7 @@ public class Database {
         return get;
     }
 
-    public static String createItem(Item item) {
+    public static int createItem(Item item) {
         connectDB();
         try {
             Statement statement = conn.createStatement();
@@ -119,11 +125,13 @@ public class Database {
 
         } catch (SQLException throwables) {
             throwables.printStackTrace();
+            return 1;
         }
         disconnectDB();
-        return "criou item";
+        return 0;
     }
 
+    /*//Old overloaded method (Unused)
     public static String createItem(String name, String description) {
         connectDB();
         try {
@@ -136,7 +144,7 @@ public class Database {
         }
         disconnectDB();
         return "criou item";
-    }
+    }//*/
 
 
     public static int depositItems(int qty, String itemName){
@@ -170,6 +178,7 @@ public class Database {
         disconnectDB();
     }//*/
 
+        /* old overloaded method (unused)
     public static int createDelivery(String address, int qty, String itemName){
         connectDB();
         try {
@@ -185,29 +194,40 @@ public class Database {
         }
         disconnectDB();
         return 0;
-    }
+    }//*/
 
-    //Overloaded method for hashmaps<name, qty>
+
+    //Overloaded method if param is hashmaps<name, qty>
+    //not overloaded anymore :D
     public static int createDelivery(String address, Map<String, Integer> itemNames){
         connectDB();
         try {
+            //checks if item is in stock
+            for (Map.Entry<String, Integer> item : itemNames.entrySet()) {
+                int itemStock = getStock(getItemId(item.getKey()));
+                if (item.getValue() > itemStock){
+                    return 2;
+                }
+            }
             Statement statement = conn.createStatement();
             statement.execute("INSERT INTO delivery(address) VALUES('" + address + "')", Statement.RETURN_GENERATED_KEYS);
             ResultSet result = statement.getGeneratedKeys();
             result.next();
             int deliveryId = Integer.parseInt(result.getString(1));
-            Iterator it = itemNames.entrySet().iterator();
-            while (it.hasNext()) {
-                Map.Entry pair = (Map.Entry)it.next();
+            for (Map.Entry<String, Integer> stringIntegerEntry : itemNames.entrySet()) {
+                Map.Entry pair = (Map.Entry) stringIntegerEntry;
                 statement.execute("INSERT INTO deliveryItem(delivery_id, item_id, qty) VALUES(" + deliveryId + ", " + getItemId(pair.getKey().toString()) + ", " + pair.getValue() + ")");
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
+            return 1;
         }
         disconnectDB();
         return 0;
     }
-    //returns [delivery[address[[item, quantity]]], delivery[address[[item, quantity][item, quantity][item, quantity][item, quantity]]]]
+
+    //returns [delivery[address[[item, quantity]]], delivery[address[[item, quantity][item, quantity][item, quantity][item, quantity]]]] ??? oh no
+    //let's do objects instead
     public static List<Delivery> getDelivery(){
         connectDB();
         List<Delivery> deliveries = new ArrayList<>();

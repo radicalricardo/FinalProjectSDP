@@ -13,7 +13,6 @@ import java.io.IOException;
 import java.util.List;
 
 //Items
-@SuppressWarnings("serial")
 @WebServlet("/Items/*")
 public class ItemRESTApi extends HttpServlet {
     @Override
@@ -37,20 +36,26 @@ public class ItemRESTApi extends HttpServlet {
         jsonWriter.close();
     }
 
+    //{"name": "shaman", "description": "enhacement"}
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         JsonObject reader = Json.createReader(req.getReader()).readObject();
         Item item = new Item(reader.getString("name"), reader.getString("description"));
         //Database.createItem(reader.getString("name"),reader.getString("description"));
-        Database.createItem(item);
+        int result = Database.createItem(item);
+        if (result == 1) {
+            resp.sendError(201, "Erro a registar o item.");
+        }
     }
 
+    //{"name": "shaman", "description": "elemental"}
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         JsonObject reader = Json.createReader(req.getReader()).readObject();
         Database.alterDescription(reader.getString("name"), reader.getString("description"));
     }
 
+    //{"name": "mage"}
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         JsonObject reader = Json.createReader(req.getReader()).readObject();
