@@ -21,6 +21,7 @@ public class DeliveryRESTApi extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json");
+        setAccessControlHeaders(resp);
         List<Delivery> deliveryList = Database.getDelivery();
         JsonObjectBuilder jsonBuilder = Json.createObjectBuilder();
         for (Delivery delivery : deliveryList){
@@ -64,6 +65,17 @@ public class DeliveryRESTApi extends HttpServlet {
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         JsonObject reader = Json.createReader(req.getReader()).readObject();
         Database.alterAddress(reader.getInt("id"), reader.getString("address"));
+    }
+
+    @Override
+    protected void doOptions(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        setAccessControlHeaders(resp);
+        resp.setStatus(HttpServletResponse.SC_OK);
+    }
+
+    private void setAccessControlHeaders(HttpServletResponse resp) {
+        resp.setHeader("Access-Control-Allow-Origin", "*");
+        resp.setHeader("Access-Control-Allow-Methods", "GET");
     }
 
 }

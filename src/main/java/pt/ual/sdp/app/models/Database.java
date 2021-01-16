@@ -3,7 +3,7 @@ package pt.ual.sdp.app.models;
 //docker run --name postgres-0 -e POSTGRES_PASSWORD=30002299 --network net -v "path/to/db":/sql -d postgres:alpine
 //docker run --name sdpWildfly -p 8080:8080 --network net -v "path/to/war":/opt/jboss/wildfly/standalone/deployments asabino/wildfly:21.0.2.Final-jdk15
 
-
+//docker run --name postgres-0 -e POSTGRES_PASSWORD=30002299 --network net -v D:\\code\\sdp\\FinalProjectSDP\\src\\main\\sql:/sql -d postgres:alpine
 
 import pt.ual.sdp.app.controllers.Delivery;
 import pt.ual.sdp.app.controllers.Item;

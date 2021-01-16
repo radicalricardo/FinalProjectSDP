@@ -21,6 +21,7 @@ public class StockRESTApi extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json");
+        setAccessControlHeaders(resp);
         List<List<String>> items = Database.getAllItemsInStock();
         JsonObjectBuilder jsonBuilder = Json.createObjectBuilder();
         JsonObjectBuilder innerJson = Json.createObjectBuilder();
@@ -45,7 +46,17 @@ public class StockRESTApi extends HttpServlet {
         if (result == 1){
             resp.sendError(201, "O item não foi registado");
         }
+    }
 
+    @Override
+    protected void doOptions(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        setAccessControlHeaders(resp);
+        resp.setStatus(HttpServletResponse.SC_OK);
+    }
+
+    private void setAccessControlHeaders(HttpServletResponse resp) {
+        resp.setHeader("Access-Control-Allow-Origin", "*");
+        resp.setHeader("Access-Control-Allow-Methods", "GET");
     }
 
 

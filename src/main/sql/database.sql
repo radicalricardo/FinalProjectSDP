@@ -5,7 +5,7 @@
 -- Dumped from database version 13.1
 -- Dumped by pg_dump version 13.1
 
--- Started on 2021-01-13 16:06:33
+-- Started on 2021-01-16 14:48:08
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -20,7 +20,7 @@ SET row_security = off;
 
 DROP DATABASE "restAPI";
 --
--- TOC entry 3030 (class 1262 OID 24576)
+-- TOC entry 3032 (class 1262 OID 24576)
 -- Name: restAPI; Type: DATABASE; Schema: -; Owner: postgres
 --
 
@@ -43,31 +43,12 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
--- TOC entry 3031 (class 0 OID 0)
--- Dependencies: 3030
+-- TOC entry 3033 (class 0 OID 0)
+-- Dependencies: 3032
 -- Name: DATABASE "restAPI"; Type: COMMENT; Schema: -; Owner: postgres
 --
 
 COMMENT ON DATABASE "restAPI" IS 'Database for Rest API SDP project';
-
-
---
--- TOC entry 3 (class 2615 OID 2200)
--- Name: public; Type: SCHEMA; Schema: -; Owner: postgres
---
-
-CREATE SCHEMA public;
-
-
-ALTER SCHEMA public OWNER TO postgres;
-
---
--- TOC entry 3032 (class 0 OID 0)
--- Dependencies: 3
--- Name: SCHEMA public; Type: COMMENT; Schema: -; Owner: postgres
---
-
-COMMENT ON SCHEMA public IS 'standard public schema';
 
 
 SET default_tablespace = '';
@@ -204,39 +185,27 @@ CREATE TABLE public.stock (
 ALTER TABLE public.stock OWNER TO postgres;
 
 --
--- TOC entry 3018 (class 0 OID 24592)
+-- TOC entry 3020 (class 0 OID 24592)
 -- Dependencies: 202
 -- Data for Name: delivery; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 COPY public.delivery (id, address) FROM stdin;
-25	Av do Uruguai, 16, Benfica
-26	Rua das Putas Descalças, 29, Alguidares de Baixo
-27	Travessa do Cabrão, 99, Putapólis
-28	Rua do Java, 22, Monte da Pancadaria
-29	Avenida do Cu Atravessado, 92, Quinta do Piço
 \.
 
 
 --
--- TOC entry 3024 (class 0 OID 24647)
+-- TOC entry 3026 (class 0 OID 24647)
 -- Dependencies: 208
 -- Data for Name: deliveryitem; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 COPY public.deliveryitem (delivery_id, id, item_id, qty) FROM stdin;
-25	16	26	10
-26	17	24	20
-27	18	23	15
-28	19	25	19
-29	20	27	30
-29	21	29	80
-29	22	28	50
 \.
 
 
 --
--- TOC entry 3017 (class 0 OID 24582)
+-- TOC entry 3019 (class 0 OID 24582)
 -- Dependencies: 201
 -- Data for Name: deposit; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -246,41 +215,27 @@ COPY public.deposit (id, qty, item_id) FROM stdin;
 
 
 --
--- TOC entry 3016 (class 0 OID 24577)
+-- TOC entry 3018 (class 0 OID 24577)
 -- Dependencies: 200
 -- Data for Name: item; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 COPY public.item (id, name, description) FROM stdin;
-23	sporting	lagartos
-24	big mac	gordo
-25	ricardo	big mac
-26	ferrari	vroom
-27	Tunga	t
-28	Trunga	f
-29	Catrapunga	c
 \.
 
 
 --
--- TOC entry 3019 (class 0 OID 24612)
+-- TOC entry 3021 (class 0 OID 24612)
 -- Dependencies: 203
 -- Data for Name: stock; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 COPY public.stock (item_id, stock) FROM stdin;
-23	0
-24	0
-25	0
-26	0
-27	0
-28	0
-29	0
 \.
 
 
 --
--- TOC entry 3033 (class 0 OID 0)
+-- TOC entry 3034 (class 0 OID 0)
 -- Dependencies: 206
 -- Name: delivery_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -289,7 +244,7 @@ SELECT pg_catalog.setval('public.delivery_id_seq', 29, true);
 
 
 --
--- TOC entry 3034 (class 0 OID 0)
+-- TOC entry 3035 (class 0 OID 0)
 -- Dependencies: 207
 -- Name: deliveryitem_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -298,25 +253,25 @@ SELECT pg_catalog.setval('public.deliveryitem_id_seq', 22, true);
 
 
 --
--- TOC entry 3035 (class 0 OID 0)
+-- TOC entry 3036 (class 0 OID 0)
 -- Dependencies: 204
 -- Name: deposit_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.deposit_id_seq', 12, true);
+SELECT pg_catalog.setval('public.deposit_id_seq', 15, true);
 
 
 --
--- TOC entry 3036 (class 0 OID 0)
+-- TOC entry 3037 (class 0 OID 0)
 -- Dependencies: 205
 -- Name: item_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.item_id_seq', 29, true);
+SELECT pg_catalog.setval('public.item_id_seq', 31, true);
 
 
 --
--- TOC entry 2877 (class 2606 OID 24596)
+-- TOC entry 2879 (class 2606 OID 24596)
 -- Name: delivery delivery_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -325,7 +280,7 @@ ALTER TABLE ONLY public.delivery
 
 
 --
--- TOC entry 2881 (class 2606 OID 24651)
+-- TOC entry 2883 (class 2606 OID 24651)
 -- Name: deliveryitem deliveryitem_id; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -343,7 +298,7 @@ ALTER TABLE ONLY public.item
 
 
 --
--- TOC entry 2875 (class 2606 OID 24586)
+-- TOC entry 2877 (class 2606 OID 24586)
 -- Name: deposit deposit_pkey1; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -352,7 +307,16 @@ ALTER TABLE ONLY public.deposit
 
 
 --
--- TOC entry 2879 (class 2606 OID 24616)
+-- TOC entry 2875 (class 2606 OID 24663)
+-- Name: item name_unique; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.item
+    ADD CONSTRAINT name_unique UNIQUE (name);
+
+
+--
+-- TOC entry 2881 (class 2606 OID 24616)
 -- Name: stock stock_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -361,7 +325,7 @@ ALTER TABLE ONLY public.stock
 
 
 --
--- TOC entry 2884 (class 2606 OID 24652)
+-- TOC entry 2886 (class 2606 OID 24652)
 -- Name: deliveryitem delivery_id; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -370,7 +334,7 @@ ALTER TABLE ONLY public.deliveryitem
 
 
 --
--- TOC entry 2882 (class 2606 OID 24587)
+-- TOC entry 2884 (class 2606 OID 24587)
 -- Name: deposit item_id; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -379,7 +343,7 @@ ALTER TABLE ONLY public.deposit
 
 
 --
--- TOC entry 2883 (class 2606 OID 24617)
+-- TOC entry 2885 (class 2606 OID 24617)
 -- Name: stock item_id; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -388,7 +352,7 @@ ALTER TABLE ONLY public.stock
 
 
 --
--- TOC entry 2885 (class 2606 OID 24657)
+-- TOC entry 2887 (class 2606 OID 24657)
 -- Name: deliveryitem item_id; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -396,7 +360,7 @@ ALTER TABLE ONLY public.deliveryitem
     ADD CONSTRAINT item_id FOREIGN KEY (item_id) REFERENCES public.item(id);
 
 
--- Completed on 2021-01-13 16:06:34
+-- Completed on 2021-01-16 14:48:08
 
 --
 -- PostgreSQL database dump complete
