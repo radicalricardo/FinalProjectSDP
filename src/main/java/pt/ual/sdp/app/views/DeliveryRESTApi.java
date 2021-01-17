@@ -23,21 +23,25 @@ public class DeliveryRESTApi extends HttpServlet {
         resp.setContentType("application/json");
         setAccessControlHeaders(resp);
         List<Delivery> deliveryList = Database.getDelivery();
-        JsonObjectBuilder jsonBuilder = Json.createObjectBuilder();
+        JsonArrayBuilder jsonArray = Json.createArrayBuilder();
+
         for (Delivery delivery : deliveryList){
             JsonObjectBuilder addressJson = Json.createObjectBuilder();
             addressJson.add("address", delivery.getAddress());
-            JsonArrayBuilder jsonArray = Json.createArrayBuilder();
+            JsonArrayBuilder deliveryArray = Json.createArrayBuilder();
             for(Map.Entry<String, Integer> item : delivery.getItem().entrySet()){
                 JsonObjectBuilder buffer = Json.createObjectBuilder();
                 buffer.add("name", item.getKey());
                 buffer.add("qty", item.getValue());
-                jsonArray.add(buffer);
+                deliveryArray.add(buffer);
             }
-            addressJson.add("items", jsonArray.build());
-            jsonBuilder.add(delivery.getId(), addressJson.build());
+            addressJson.add("items", deliveryArray.build());
+            addressJson.add("id", delivery.getId());
+            jsonArray.add(addressJson.build());
         }
         JsonWriter jsonWriter = Json.createWriter(resp.getWriter());
+        JsonObjectBuilder jsonBuilder = Json.createObjectBuilder();
+        jsonBuilder.add("deliveries", jsonArray);
         jsonWriter.writeObject(jsonBuilder.build());
         jsonWriter.close();
     }

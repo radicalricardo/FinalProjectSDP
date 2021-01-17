@@ -2,10 +2,7 @@ package pt.ual.sdp.app.views;
 
 import pt.ual.sdp.app.models.Database;
 
-import javax.json.Json;
-import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
-import javax.json.JsonWriter;
+import javax.json.*;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -23,7 +20,7 @@ public class StockRESTApi extends HttpServlet {
         resp.setContentType("application/json");
         setAccessControlHeaders(resp);
         List<List<String>> items = Database.getAllItemsInStock();
-        JsonObjectBuilder jsonBuilder = Json.createObjectBuilder();
+        JsonArrayBuilder jsonArray = Json.createArrayBuilder();
         JsonObjectBuilder innerJson = Json.createObjectBuilder();
 
         for(int i = 0; i < items.size(); i++){
@@ -31,9 +28,11 @@ public class StockRESTApi extends HttpServlet {
             innerJson.add("name", innerList.get(0));
             innerJson.add("description", innerList.get(1));
             innerJson.add("quantityStock", innerList.get(2));
-            jsonBuilder.add("item-" + i, innerJson);
+            jsonArray.add(innerJson);
         }
         JsonWriter jsonWriter = Json.createWriter(resp.getWriter());
+        JsonObjectBuilder jsonBuilder = Json.createObjectBuilder();
+        jsonBuilder.add("stock", jsonArray);
         jsonWriter.writeObject(jsonBuilder.build());
         jsonWriter.close();
     }
