@@ -2,7 +2,6 @@ package pt.ual.sdp.app.models;
 
 //docker run --name postgres-0 -e POSTGRES_PASSWORD=30002299 --network net -v "path/to/db":/sql -d postgres:alpine
 //docker run --name sdpWildfly -p 8080:8080 --network net -v "path/to/war":/opt/jboss/wildfly/standalone/deployments asabino/wildfly:21.0.2.Final-jdk15
-
 //docker run --name postgres-0 -e POSTGRES_PASSWORD=30002299 --network net -v D:\\code\\sdp\\FinalProjectSDP\\src\\main\\sql:/sql -d postgres:alpine
 
 import pt.ual.sdp.app.controllers.Delivery;
@@ -13,6 +12,7 @@ import java.util.*;
 
 public class Database {
     public static final String address = "jdbc:postgresql://postgres-0:5432/restAPI";
+    //public static final String address = "jdbc:postgresql://localhost:5432/restAPI";
     public static Connection conn = null;
     public static final String user = "postgres";
     public static final String password = "30002299";
@@ -217,6 +217,7 @@ public class Database {
             for (Map.Entry<String, Integer> stringIntegerEntry : itemNames.entrySet()) {
                 Map.Entry pair = (Map.Entry) stringIntegerEntry;
                 statement.execute("INSERT INTO deliveryItem(delivery_id, item_id, qty) VALUES(" + deliveryId + ", " + getItemId(pair.getKey().toString()) + ", " + pair.getValue() + ")");
+                statement.execute("UPDATE stock SET stock = stock - %s WHERE item_id = %d".formatted(pair.getValue(), getItemId(pair.getKey().toString())));
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
