@@ -20,12 +20,17 @@ http://localhost:8080
 
 ### Examples for POST commands
 Items: `{"name": "copper ore", "description": "1g"}`
+
 Stock: `{"name": "copper ore", "qty" : 30}`
+
 Delivery: `{"address": "undercity", "items": [{"name" : "peacebloom", "qty": 10}, {"name" : "copper ore", "qty": 30}]}`
+
 
 ### Examples for PUT commands
 Items: `{"name": "copper ore", "description": "2g"}`
+
 Stock: `{"name": "copper ore", "qty" : 30}`
+
 Deliveries: `{"id": 33, "address": "dalaran"}`
 
 ### Examples for DELETE commands
