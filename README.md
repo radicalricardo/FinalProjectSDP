@@ -18,6 +18,10 @@ http://localhost:8080
 
 ## Use Postman or Curl to register new items, deposits or deliveries
 
+For items use: `http://localhost:8080/api/Items`
+For stock use: `http://localhost:8080/api/Stock`
+For deliveries use: `http://localhost:8080/api/Delivery`
+
 ### Examples for POST commands
 Items: `{"name": "copper ore", "description": "1g"}`
 
